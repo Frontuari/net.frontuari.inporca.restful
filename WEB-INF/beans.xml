@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+	xsi:schemaLocation="
+http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans.xsd
+http://cxf.apache.org/jaxrs
+http://cxf.apache.org/schemas/jaxrs.xsd">
+
+	<jaxrs:server address="/">
+		<jaxrs:serviceBeans>
+			<bean class="net.frontuari.ws.controller.ApiInporca"/>
+			
+						
+		</jaxrs:serviceBeans>
+		<jaxrs:providers>
+			<bean class="net.frontuari.ws.base.AdempiereExceptionHandler"/>
+			<bean class="net.frontuari.ws.base.ExceptionHandler"/>
+			<bean class="net.frontuari.ws.base.CustomObjectMapper"/>
+			<bean class="com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider" />
+		</jaxrs:providers>
+		<jaxrs:inInterceptors>
+			<bean class="net.frontuari.ws.base.OpenTransactionInterceptor" />
+			<bean class="net.frontuari.ws.base.ConfigContextInterceptor" />
+		</jaxrs:inInterceptors>
+		<jaxrs:outInterceptors>
+			<bean class="net.frontuari.ws.base.CloseTransactionInterceptor" />
+		</jaxrs:outInterceptors>
+	</jaxrs:server>
+
+</beans>
