@@ -190,7 +190,7 @@ public class ApiInporca {
     		return Response.status(200).entity(salida.toString()).build();
     	}else {
     		log.severe("Error API BATCH: "+msj);
-    		return Response.status(202).entity(salida.toString()).build();
+    		return Response.status(422).entity(salida.toString()).build();
     	}
     	
     	
