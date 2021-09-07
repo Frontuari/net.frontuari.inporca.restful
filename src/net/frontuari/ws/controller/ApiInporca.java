@@ -104,8 +104,11 @@ public class ApiInporca {
 		pro.setMovementDate(end_date);
 		pro.setM_Locator_ID(M_Locator_ID);
 		pro.setIsCreated("Y");
-		pro.set_Attribute("c_uom_id", c_uom_id);
-		pro.set_Attribute("pp_order_id", PP_Order_ID);
+		
+		pro.set_Attribute("C_UOM_ID", c_uom_id);
+		pro.set_Attribute("PP_Order_ID", PP_Order_ID);
+		
+		
 		pro.set_Attribute("TrxType", "P");
 		pro.setAD_Org_ID(AD_Org_ID);
 		if(pro.save()) {
