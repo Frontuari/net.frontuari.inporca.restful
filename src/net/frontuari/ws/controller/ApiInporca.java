@@ -74,7 +74,7 @@ public class ApiInporca {
 	
 	private Response registerProduction(JSONObject b,ResultSet rs) throws SQLException, JSONException, ParseException {
 		
-		MProduction pro = new MProduction(Env.getCtx(),null,null);
+		MProduction pro = new MProduction(Env.getCtx(),0,null);
 		String DocumentNo=b.getString("production_order_code");
 		//int M_Production_ID=b.getInt("id");
 		int M_Product_ID=rs.getInt("m_product_id");
@@ -105,15 +105,19 @@ public class ApiInporca {
 		pro.setM_Locator_ID(M_Locator_ID);
 		pro.setIsCreated("Y");
 		
-		pro.set_Attribute("C_UOM_ID", c_uom_id);
-		pro.set_Attribute("PP_Order_ID", PP_Order_ID);
+		pro.set_ValueOfColumn("C_UOM_ID", c_uom_id);
+		pro.set_ValueOfColumn("PP_Order_ID", PP_Order_ID);
+		//	Added by Jorge Colmenarez, 2021-09-14 10:45
+		//	Add PP_Product_BOM_ID From PP_Order
+		int PP_Product_BOM_ID = DB.getSQLValue(null, "SELECT PP_Product_BOM_ID FROM PP_Order WHERE PP_Order_ID=?", PP_Order_ID);
+		pro.set_ValueOfColumn("PP_Product_BOM_ID", PP_Product_BOM_ID);
 		
-		
-		pro.set_Attribute("TrxType", "P");
+		pro.set_ValueOfColumn("TrxType", "P");
+		//	End Jorge Colmenarez
 		pro.setAD_Org_ID(AD_Org_ID);
 		if(pro.save()) {
 			int M_Production_ID=pro.get_ID();
-			MProductionLine proL = new MProductionLine(Env.getCtx(),null,null);
+			MProductionLine proL = new MProductionLine(Env.getCtx(),0,null);
 			
 			
 			//--------------Registrar mismo producto
@@ -131,10 +135,8 @@ public class ApiInporca {
 			
 			
 			//---------------------------------------
-			
-			
 			for (int i = 0; i < batch_hopper_lots.length(); i++) {
-				MProductionLine proE = new MProductionLine(Env.getCtx(),null,null);
+				MProductionLine proE = new MProductionLine(Env.getCtx(),0,null);
 			    JSONObject obj = batch_hopper_lots.getJSONObject(i);
 			    String lProductCode		=obj.getString("product_code");
 			    int lproduct_id=0;
@@ -162,14 +164,25 @@ public class ApiInporca {
 	            proE.setM_Product_ID(lproduct_id);
 	            proE.setDescription(lhopper_name);
 	            proE.setLine(lhopper_id);
+	            proE.setPlannedQty(lreal_amount);
 	            proE.setQtyUsed(lreal_amount);
 	            proE.setMovementQty(MovementQty);
 	            proE.setIsEndProduct(false);
 	            proE.setM_Locator_ID(M_Locator_ID);
 	            proE.save();
-	            
+				//	Added by Jorge Colmenarez, 2021-09-14 11:00
+	            //	Cumulate QtyReceipt
+	            monto = monto.add(lreal_amount);
 	          
-			}			
+			}
+			//	Set ProductionQty
+			proL.setPlannedQty(monto);
+			proL.setQtyUsed(monto);
+			proL.setMovementQty(monto);
+			proL.save();
+			pro.setProductionQty(monto);
+			pro.save();
+			//	End Jorge Colmenarez
 			return msj("Guardado exitosamente",true);
 			
 		}else {
