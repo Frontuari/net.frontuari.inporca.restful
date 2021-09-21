@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-Category: idempiere-plugin
 Bundle-ManifestVersion: 2
 Bundle-Name: inporca Restful
-Bundle-SymbolicName: net.frontuari.inporca.restful
+Bundle-SymbolicName: net.frontuari.inporca.restful;singleton:=true
 Bundle-Version: 7.1.0.qualifier
 Bundle-Vendor: Frontuari <http://frontuari.net>
 Bundle-ActivationPolicy: lazy
