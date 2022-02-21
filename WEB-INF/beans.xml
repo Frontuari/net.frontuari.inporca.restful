@@ -11,8 +11,7 @@ http://cxf.apache.org/schemas/jaxrs.xsd">
 	<jaxrs:server address="/">
 		<jaxrs:serviceBeans>
 			<bean class="net.frontuari.ws.controller.ApiInporca"/>
-			
-						
+			<bean class="net.frontuari.ws.controller.VersionController"/>						
 		</jaxrs:serviceBeans>
 		<jaxrs:providers>
 			<bean class="net.frontuari.ws.base.AdempiereExceptionHandler"/>

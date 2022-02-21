@@ -16,29 +16,25 @@
  * Copyright (C) 2019 INGEINT <https://www.ingeint.com> and contributors (see README.md file).
  */
 
-package net.frontuari.ws.base;
+package net.frontuari.ws.controller;
 
-import java.util.Properties;
+import java.io.IOException;
 
-import org.apache.cxf.interceptor.Fault;
-import org.apache.cxf.message.Message;
-import org.apache.cxf.phase.AbstractPhaseInterceptor;
-import org.apache.cxf.phase.Phase;
-import org.compiere.util.Env;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
-public class ConfigContextInterceptor extends AbstractPhaseInterceptor<Message> {
+import net.frontuari.ws.base.BundleInfo;
+import net.frontuari.ws.presenter.Version;
 
-	public ConfigContextInterceptor() {
-		super(Phase.PRE_LOGICAL);
-	}
+@Path("/version")
+@Produces(MediaType.APPLICATION_JSON)
+public class VersionController {
 
-	@Override
-	public void handleMessage(Message message) throws Fault {
-		Properties ctx = new Properties();
-		ctx.put("#AD_Client_ID", "1000000");
-		ctx.put("#AD_Language", "es_CO");
-		ctx.put("#AD_Org_ID", "1000001");
-		Env.setCtx(ctx);
+	@GET
+	public Version get() throws IOException {
+		return new Version(BundleInfo.getBundleName(), BundleInfo.getBundleID(), BundleInfo.getBundleVersion(), BundleInfo.getBundleVendor());
 	}
 
 }

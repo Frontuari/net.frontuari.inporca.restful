@@ -16,29 +16,55 @@
  * Copyright (C) 2019 INGEINT <https://www.ingeint.com> and contributors (see README.md file).
  */
 
-package net.frontuari.ws.base;
+package net.frontuari.ws.presenter;
 
-import java.util.Properties;
+public class Version {
 
-import org.apache.cxf.interceptor.Fault;
-import org.apache.cxf.message.Message;
-import org.apache.cxf.phase.AbstractPhaseInterceptor;
-import org.apache.cxf.phase.Phase;
-import org.compiere.util.Env;
+	private String id;
+	private String name;
+	private String version;
+	private String vendor;
 
-public class ConfigContextInterceptor extends AbstractPhaseInterceptor<Message> {
-
-	public ConfigContextInterceptor() {
-		super(Phase.PRE_LOGICAL);
+	public String getId() {
+		return id;
 	}
 
-	@Override
-	public void handleMessage(Message message) throws Fault {
-		Properties ctx = new Properties();
-		ctx.put("#AD_Client_ID", "1000000");
-		ctx.put("#AD_Language", "es_CO");
-		ctx.put("#AD_Org_ID", "1000001");
-		Env.setCtx(ctx);
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
+	}
+
+	public String getVendor() {
+		return vendor;
+	}
+
+	public void setVendor(String vendor) {
+		this.vendor = vendor;
+	}
+
+	public Version(String name, String id, String version, String vendor) {
+		this.name = name;
+		this.id = id;
+		this.version = version;
+		this.vendor = vendor;
+	}
+
+	public Version() {
 	}
 
 }
