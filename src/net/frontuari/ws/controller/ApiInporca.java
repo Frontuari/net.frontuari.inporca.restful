@@ -18,6 +18,7 @@ import org.compiere.model.MProductionLine;
 import org.compiere.util.CLogger;
 import org.compiere.util.DB;
 import org.compiere.util.Env;
+import org.eevolution.model.MPPProductBOM;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -64,6 +65,11 @@ public class ApiInporca {
 		int c_uom_id=p.getC_UOM_ID();
 		int AD_Org_ID=Env.getContextAsInt(Env.getCtx(), "#AD_Org_ID");
 		int M_Locator_ID = p.getM_Locator_ID();
+		
+		MPPProductBOM pbom = MPPProductBOM.getDefault(p, null);
+		int pBOMID = 0;
+		if(pbom != null)
+			pBOMID = pbom.get_ID();
 		//-------------------------------
 		
 		pro.setDocumentNo(DocumentNo);
@@ -77,6 +83,7 @@ public class ApiInporca {
 		pro.set_ValueOfColumn("C_UOM_ID", c_uom_id);
 		pro.set_ValueOfColumn("TrxType", "P");
 		pro.setProductionQty(header.getBigDecimal("amount"));
+		pro.set_ValueOfColumn("PP_Product_BOM_ID",pBOMID);
 		
 		if(pro.save()) {
 			int M_Production_ID=pro.get_ID();
@@ -115,8 +122,12 @@ public class ApiInporca {
 	            //	Scrap Percent
 	            BigDecimal scrap = (BigDecimal) pLine.get_Value("QtyScrap");
 	            BigDecimal scrapQty = BigDecimal.ZERO;
-	            if(scrap.compareTo(BigDecimal.ZERO) > 0);
+	            if(scrap.compareTo(BigDecimal.ZERO) > 0)
+	            {
 	            	scrapQty = movementQty.multiply(scrap.divide(new BigDecimal(100), 4, RoundingMode.HALF_UP));
+	            	scrapQty = scrapQty.setScale(2, RoundingMode.HALF_UP);
+	            }
+	            	
 	            
 	            proE.setDescription("Cantidad Reportada por Mango: "+movementQty+", % de Despercicio del Producto: "+scrap+", Cantidad Desperdicio: "+scrapQty+", Total Consumido: "+movementQty.add(scrapQty));	            	
 	            proE.setM_Production_ID(M_Production_ID);
