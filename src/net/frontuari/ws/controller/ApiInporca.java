@@ -15,6 +15,7 @@ import javax.ws.rs.core.Response;
 import org.compiere.model.MProduct;
 import org.compiere.model.MProduction;
 import org.compiere.model.MProductionLine;
+import org.compiere.model.Query;
 import org.compiere.util.CLogger;
 import org.compiere.util.DB;
 import org.compiere.util.Env;
@@ -32,10 +33,9 @@ public class ApiInporca {
 	@Path("/")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response app(String x) {
-		JSONObject obj = new JSONObject(x);
-		JSONObject batch = obj.getJSONObject("production_order");
-		
 		try {
+			JSONObject obj = new JSONObject(x);
+			JSONObject batch = obj.getJSONObject("production_order");
 			return registerProduction(batch);
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -43,6 +43,9 @@ public class ApiInporca {
 			e.printStackTrace();
 		} catch (ParseException e) {
 			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+			msj(e.getLocalizedMessage(), false);
 		}
 		
 		return null;
@@ -66,7 +69,11 @@ public class ApiInporca {
 		int AD_Org_ID=Env.getContextAsInt(Env.getCtx(), "#AD_Org_ID");
 		int M_Locator_ID = p.getM_Locator_ID();
 		
-		MPPProductBOM pbom = MPPProductBOM.getDefault(p, null);
+		MPPProductBOM pbom = new Query(Env.getCtx(), MPPProductBOM.Table_Name, "M_Product_ID=? AND Value=?", null)
+				.setParameters(new Object[]{p.getM_Product_ID(), p.getValue()})
+				.setClient_ID()
+				.setOnlyActiveRecords(true)
+				.first();
 		int pBOMID = 0;
 		if(pbom != null)
 			pBOMID = pbom.get_ID();
@@ -156,7 +163,7 @@ public class ApiInporca {
     		return Response.status(200).entity(salida.toString()).build();
     	}else {
     		log.severe("Error API BATCH: "+msj);
-    		return Response.status(422).entity(salida.toString()).build();
+    		return Response.status(500).entity(salida.toString()).build();
     	}	
 	}
 
