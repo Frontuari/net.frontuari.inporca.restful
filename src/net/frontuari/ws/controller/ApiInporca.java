@@ -12,6 +12,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.compiere.model.MDocType;
 import org.compiere.model.MProduct;
 import org.compiere.model.MProduction;
 import org.compiere.model.MProductionLine;
@@ -78,7 +79,12 @@ public class ApiInporca {
 		if(pbom != null)
 			pBOMID = pbom.get_ID();
 		//-------------------------------
-		
+		//	Added by Jorge Colmenarez, 2024-03-27 09:44
+		//	Set Default DocType Production
+		int dtProductionId = MDocType.getDocType(MDocType.DOCBASETYPE_MaterialProduction);
+		if(dtProductionId>0)
+			pro.setC_DocType_ID(dtProductionId);
+		//	End Jorge Colmenarez
 		pro.setDocumentNo(DocumentNo);
 		pro.setAD_Org_ID(AD_Org_ID);
 		pro.setM_Product_ID(M_Product_ID);

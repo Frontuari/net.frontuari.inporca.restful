@@ -5,9 +5,79 @@
 	<parent>
 		<groupId>org.idempiere</groupId>
 		<artifactId>org.idempiere.parent</artifactId>
-		<version>7.1.0-SNAPSHOT</version>
-		<relativePath>../../idempiere-release-7.1/org.idempiere.parent/pom.xml</relativePath>
+		<version>${revision}</version>
+		<relativePath>../../../idempiere-release11/org.idempiere.parent/pom.xml</relativePath>
 	</parent>
+	<properties>
+		<revision>11.0.0-SNAPSHOT</revision>
+	</properties>
 	<artifactId>net.frontuari.inporca.restful</artifactId>
 	<packaging>eclipse-plugin</packaging>
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>auto-clean</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>clean</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>lib</directory>
+							<includes>
+								<include>*.jar</include>
+							</includes>
+							<followSymlinks>false</followSymlinks>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>validate</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.apache.xmlbeans</groupId>
+      								<artifactId>xmlbeans</artifactId>
+      								<version>3.1.0</version>
+								</artifactItem>
+								<artifactItem>
+    								<groupId>org.apache.cxf</groupId>
+    								<artifactId>cxf-rt-databinding-xmlbeans</artifactId>
+    								<version>3.1.18</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.apache.cxf</groupId>
+								    <artifactId>cxf-rt-bindings-object</artifactId>
+								    <version>3.1.18</version>
+								</artifactItem>
+								<artifactItem>
+    								<groupId>org.apache.cxf</groupId>
+    								<artifactId>cxf-rt-rs-extension-providers</artifactId>
+    								<version>3.1.18</version>
+								</artifactItem>
+							</artifactItems>
+							<outputDirectory>lib</outputDirectory>
+							<stripVersion>true</stripVersion>
+							<overWriteReleases>true</overWriteReleases>
+							<overWriteSnapshots>true</overWriteSnapshots>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>
