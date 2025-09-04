@@ -118,7 +118,7 @@ public class ApiInporca {
 			
             //	Get JSON Lines
     		JSONArray batch_hopper_lots = b.getJSONArray("consumptions");
-    		int line = 10;
+    		int line = 20;
 			//---------------------------------------
 			for (int i = 0; i < batch_hopper_lots.length(); i++) {
 				MProductionLine proE = new MProductionLine(Env.getCtx(),0,null);
@@ -146,7 +146,7 @@ public class ApiInporca {
 	            proE.setM_Production_ID(M_Production_ID);
 	            proE.setAD_Org_ID(AD_Org_ID);
 	            proE.setM_Product_ID(lproduct_id);
-	            proE.setLine(line+10);
+	            proE.setLine(line);
 	            proE.setPlannedQty(movementQty);
 	            proE.setQtyUsed(movementQty.add(scrapQty));
 	            proE.setMovementQty((movementQty.add(scrapQty)).negate());
@@ -154,6 +154,7 @@ public class ApiInporca {
 	            proE.setM_Locator_ID(pLine.getM_Locator_ID());
 	            proE.set_ValueOfColumn("C_UOM_ID", pLine.getC_UOM_ID());
 	            proE.save();
+	            line+=10;
 			}
 			return msj("Guardado exitosamente",true);
 			
