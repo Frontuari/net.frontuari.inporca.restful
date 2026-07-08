@@ -19,7 +19,6 @@ Require-Bundle: org.adempiere.base,
  jakarta.xml.soap-api,
  stax2-api,
  jakarta.annotation-api,
- org.eclipse.jetty.servlet-api,
  org.eclipse.osgi,
  org.glassfish.hk2.external.aopalliance-repackaged,
  org.apache.ecs,
@@ -111,3 +110,5 @@ Import-Package: javax.activation,
  org.zkoss.zhtml
 Bundle-Activator: net.frontuari.ws.base.CustomActivator
 Web-ContextPath: api
+Jetty-Environment: ee8
+Eclipse-BundleShape: dir
